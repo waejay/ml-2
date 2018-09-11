@@ -17,7 +17,53 @@ grad = zeros(size(theta));
 %               Compute the partial derivatives and set grad to the partial
 %               derivatives of the cost w.r.t. each parameter in theta
 
+% --- COST FUNCTION ---
+for i = 1:m
 
+	% Compute hypothesis
+	hypothesis = sigmoid(theta' * X(i,:)'); 
+
+	% Add to cost function
+	J += ((-y(i, 1) * log(hypothesis) - ((1 - y(i, 1)) * log(1 - hypothesis) )));
+
+end
+
+J = J / m;		% Divide by number of training sets
+
+jTemp = 0;
+
+for j = 2:size(theta)
+	jTemp += theta(j) ^ 2;
+end
+
+jTemp = (jTemp * lambda) / (2*m);
+
+J += jTemp;
+
+% --- GRADIENT DESCENT --- %
+
+temp = zeros(size(theta), 1);
+
+
+for i = 1:m
+	hypothesis = sigmoid(theta' * X(i,:)');
+
+	% jth = 0
+	temp(1) += (((hypothesis) - y(i)) * X(i, 1)) / m;
+
+	% jth >= 1
+	for j = 2:size(theta)
+		temp(j) += ((((hypothesis) - y(i)) * X(i, j)) / m);
+	end
+end	
+
+for j = 2:size(theta)
+	temp(j) += (lambda / m) * theta(j);
+end
+
+for i = 1:size(grad)
+	grad(i) = temp(i);
+end
 
 
 
